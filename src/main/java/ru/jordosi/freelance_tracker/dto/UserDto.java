@@ -1,0 +1,25 @@
+package ru.jordosi.freelance_tracker.dto;
+
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+import ru.jordosi.freelance_tracker.model.User;
+
+@Data
+@AllArgsConstructor
+@NoArgsConstructor
+public class UserDto {
+    private Long id;
+    private String username;
+    private String email;
+    private User.Role role;
+
+    public static UserDto from(User user) {
+        return new UserDto(
+                user.getId(),
+                user.getUsername(),
+                user.getEmail(),
+                user.getRole()
+        );
+    }
+}
