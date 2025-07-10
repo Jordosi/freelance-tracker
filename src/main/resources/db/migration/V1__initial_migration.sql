@@ -5,6 +5,6 @@ CREATE TABLE users
     password   VARCHAR(255)                            NOT NULL,
     email      VARCHAR(255)                            NOT NULL,
     role       SMALLINT                                NOT NULL,
-    created_at TIMESTAMP WITHOUT TIME ZONE             NOT NULL,
+    created_at TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT pk_users PRIMARY KEY (id)
 );
