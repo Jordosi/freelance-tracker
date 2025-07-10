@@ -4,7 +4,7 @@ CREATE TABLE users
     username   VARCHAR(255)                            NOT NULL,
     password   VARCHAR(255)                            NOT NULL,
     email      VARCHAR(255)                            NOT NULL,
-    role       SMALLINT                                NOT NULL,
+    role       TEXT                                    NOT NULL,
     created_at TIMESTAMP WITHOUT TIME ZONE,
     CONSTRAINT pk_users PRIMARY KEY (id)
 );

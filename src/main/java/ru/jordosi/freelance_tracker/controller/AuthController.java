@@ -7,7 +7,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.jordosi.freelance_tracker.dto.LoginRequest;
 import ru.jordosi.freelance_tracker.dto.RegisterRequest;
 import ru.jordosi.freelance_tracker.dto.UserDto;
-import ru.jordosi.freelance_tracker.security.service.AuthService;
+import ru.jordosi.freelance_tracker.service.AuthService;
 
 @RestController
 @RequestMapping("/api/auth")

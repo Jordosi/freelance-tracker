@@ -1,4 +1,4 @@
-package ru.jordosi.freelance_tracker.security.service.impl;
+package ru.jordosi.freelance_tracker.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
@@ -22,10 +22,11 @@ import ru.jordosi.freelance_tracker.model.User;
 import ru.jordosi.freelance_tracker.repository.UserRepository;
 import ru.jordosi.freelance_tracker.dto.LoginRequest;
 import ru.jordosi.freelance_tracker.dto.RegisterRequest;
-import ru.jordosi.freelance_tracker.security.service.AuthService;
-import ru.jordosi.freelance_tracker.security.service.JwtService;
+import ru.jordosi.freelance_tracker.service.AuthService;
+import ru.jordosi.freelance_tracker.service.JwtService;
 
 import java.util.Collections;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 @Service
@@ -46,7 +47,10 @@ public class AuthServiceImpl implements AuthService {
 
             SecurityContextHolder.getContext().setAuthentication(auth);
 
-            String token = jwtService.generateToken((UserDetails) auth.getPrincipal());
+            String token = jwtService.generateToken(Map.of(
+                    "roles", auth.getAuthorities()
+                            .stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList())
+            ), (UserDetails) auth.getPrincipal());
 
             return ResponseEntity.ok()
                     .header(HttpHeaders.AUTHORIZATION, "Bearer " + token)
@@ -81,14 +85,14 @@ public class AuthServiceImpl implements AuthService {
         Authentication auth = new UsernamePasswordAuthenticationToken(
                 savedUser.getUsername(),
                 null,
-                Collections.singleton(new SimpleGrantedAuthority("ROLE_" + savedUser.getRole().name()))
+                Collections.singleton(new SimpleGrantedAuthority(savedUser.getRole().name()))
         );
 
         String jwtToken = jwtService.generateToken(
                 new org.springframework.security.core.userdetails.User(
                         savedUser.getUsername(),
                         savedUser.getPassword(),
-                        Collections.singleton(new SimpleGrantedAuthority("ROLE_" + savedUser.getRole().name()))
+                        Collections.singleton(new SimpleGrantedAuthority(savedUser.getRole().name()))
                 )
         );
 
@@ -97,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
                 .body(AuthResponse.builder()
                         .token(jwtToken)
                         .username(savedUser.getUsername())
-                        .roles(Collections.singletonList("ROLE_" + savedUser.getRole().name()))
+                        .roles(Collections.singletonList(savedUser.getRole().name()))
                         .build());
     }
 

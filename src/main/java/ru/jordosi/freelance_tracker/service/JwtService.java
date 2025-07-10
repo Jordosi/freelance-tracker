@@ -1,4 +1,4 @@
-package ru.jordosi.freelance_tracker.security.service;
+package ru.jordosi.freelance_tracker.service;
 
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;

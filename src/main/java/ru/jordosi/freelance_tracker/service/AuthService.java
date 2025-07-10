@@ -1,4 +1,4 @@
-package ru.jordosi.freelance_tracker.security.service;
+package ru.jordosi.freelance_tracker.service;
 
 import org.springframework.http.ResponseEntity;
 import ru.jordosi.freelance_tracker.dto.LoginRequest;
