@@ -4,9 +4,9 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.jordosi.freelance_tracker.dto.LoginRequest;
-import ru.jordosi.freelance_tracker.dto.RegisterRequest;
-import ru.jordosi.freelance_tracker.dto.UserDto;
+import ru.jordosi.freelance_tracker.dto.auth.LoginRequest;
+import ru.jordosi.freelance_tracker.dto.auth.RegisterRequest;
+import ru.jordosi.freelance_tracker.dto.user.UserDto;
 import ru.jordosi.freelance_tracker.service.AuthService;
 
 @RestController

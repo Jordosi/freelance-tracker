@@ -28,4 +28,10 @@ public class Client {
     private String contactInfo;
     @CreationTimestamp
     private LocalDateTime createdAt;
+    @Column(name="is_global")
+    private boolean isGlobal;
+    @Column(name="created_by")
+    private Long createdBy;
+    @Column(name="is_archived")
+    private boolean isArchived;
 }

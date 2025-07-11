@@ -12,8 +12,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.web.bind.annotation.*;
-import ru.jordosi.freelance_tracker.dto.UserDto;
-import ru.jordosi.freelance_tracker.dto.UserUpdateDto;
+import ru.jordosi.freelance_tracker.dto.user.UserDto;
+import ru.jordosi.freelance_tracker.dto.user.UserUpdateDto;
 import ru.jordosi.freelance_tracker.model.User;
 import ru.jordosi.freelance_tracker.service.UserService;
 

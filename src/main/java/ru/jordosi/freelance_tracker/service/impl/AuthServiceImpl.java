@@ -16,12 +16,12 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.jordosi.freelance_tracker.dto.AuthResponse;
-import ru.jordosi.freelance_tracker.dto.UserDto;
+import ru.jordosi.freelance_tracker.dto.auth.AuthResponse;
+import ru.jordosi.freelance_tracker.dto.user.UserDto;
 import ru.jordosi.freelance_tracker.model.User;
 import ru.jordosi.freelance_tracker.repository.UserRepository;
-import ru.jordosi.freelance_tracker.dto.LoginRequest;
-import ru.jordosi.freelance_tracker.dto.RegisterRequest;
+import ru.jordosi.freelance_tracker.dto.auth.LoginRequest;
+import ru.jordosi.freelance_tracker.dto.auth.RegisterRequest;
 import ru.jordosi.freelance_tracker.service.AuthService;
 import ru.jordosi.freelance_tracker.service.JwtService;
 

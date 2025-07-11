@@ -1,4 +1,4 @@
-package ru.jordosi.freelance_tracker.dto;
+package ru.jordosi.freelance_tracker.dto.auth;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

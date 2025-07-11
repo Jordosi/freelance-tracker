@@ -3,8 +3,8 @@ package ru.jordosi.freelance_tracker.service;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.security.core.userdetails.UserDetails;
-import ru.jordosi.freelance_tracker.dto.UserDto;
-import ru.jordosi.freelance_tracker.dto.UserUpdateDto;
+import ru.jordosi.freelance_tracker.dto.user.UserDto;
+import ru.jordosi.freelance_tracker.dto.user.UserUpdateDto;
 import ru.jordosi.freelance_tracker.model.User;
 
 public interface UserService {

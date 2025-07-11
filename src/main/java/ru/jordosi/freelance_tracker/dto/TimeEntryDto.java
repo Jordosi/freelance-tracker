@@ -4,15 +4,17 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.jordosi.freelance_tracker.model.Task;
 
-import java.util.List;
+import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class AuthResponse {
-    private String token;
-    private String username;
-    private List<String> roles;
+public class TimeEntryDto {
+    private Long id;
+    private Task task;
+    private Integer timeSpent;
+    private LocalDateTime entryDate;
 }

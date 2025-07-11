@@ -1,4 +1,4 @@
-package ru.jordosi.freelance_tracker.dto;
+package ru.jordosi.freelance_tracker.dto.user;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

@@ -10,56 +10,56 @@ CREATE TABLE users
 );
 
 CREATE TABLE clients (
-                         id BIGSERIAL PRIMARY KEY,
-                         name VARCHAR(100) NOT NULL,
-                         email VARCHAR(100),
-                         contact_info TEXT,
-                         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100),
+    contact_info TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE projects (
-                          id BIGSERIAL PRIMARY KEY,
-                          name VARCHAR(100) NOT NULL,
-                          description TEXT,
-                          freelancer_id BIGINT NOT NULL REFERENCES users(id),
-                          client_id BIGINT NOT NULL REFERENCES clients(id),
-                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id BIGSERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    description TEXT,
+    freelancer_id BIGINT NOT NULL REFERENCES users(id),
+    client_id BIGINT NOT NULL REFERENCES clients(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE tasks (
-                       id BIGSERIAL PRIMARY KEY,
-                       title VARCHAR(100) NOT NULL,
-                       description TEXT,
-                       priority VARCHAR(10) CHECK (priority IN ('HIGH', 'MEDIUM', 'LOW')),
-                       status VARCHAR(20) CHECK (status IN ('NEW', 'IN_PROGRESS', 'COMPLETED')),
-                       deadline TIMESTAMP,
-                       estimated_time INTEGER,
-                       project_id BIGINT NOT NULL REFERENCES projects(id),
-                       created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id BIGSERIAL PRIMARY KEY,
+    title VARCHAR(100) NOT NULL,
+    description TEXT,
+    priority VARCHAR(10) CHECK (priority IN ('HIGH', 'MEDIUM', 'LOW')),
+    status VARCHAR(20) CHECK (status IN ('NEW', 'IN_PROGRESS', 'COMPLETED')),
+    deadline TIMESTAMP,
+    estimated_time INTEGER,
+    project_id BIGINT NOT NULL REFERENCES projects(id),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE time_entries (
-                              id BIGSERIAL PRIMARY KEY,
-                              task_id BIGINT NOT NULL REFERENCES tasks(id),
-                              time_spent INTEGER NOT NULL,
-                              entry_date TIMESTAMP NOT NULL,
-                              description TEXT
+    id BIGSERIAL PRIMARY KEY,
+    task_id BIGINT NOT NULL REFERENCES tasks(id),
+    time_spent INTEGER NOT NULL,
+    entry_date TIMESTAMP NOT NULL,
+    description TEXT
 );
 
 CREATE TABLE comments (
-                          id BIGSERIAL PRIMARY KEY,
-                          task_id BIGINT NOT NULL REFERENCES tasks(id),
-                          author_id BIGINT NOT NULL REFERENCES users(id),
-                          text TEXT NOT NULL,
-                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    id BIGSERIAL PRIMARY KEY,
+    task_id BIGINT NOT NULL REFERENCES tasks(id),
+    author_id BIGINT NOT NULL REFERENCES users(id),
+    text TEXT NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE reminders (
-                           id BIGSERIAL PRIMARY KEY,
-                           task_id BIGINT NOT NULL REFERENCES tasks(id),
-                           message TEXT NOT NULL,
-                           remind_at TIMESTAMP NOT NULL,
-                           is_sent BOOLEAN DEFAULT FALSE
+    id BIGSERIAL PRIMARY KEY,
+    task_id BIGINT NOT NULL REFERENCES tasks(id),
+    message TEXT NOT NULL,
+    remind_at TIMESTAMP NOT NULL,
+    is_sent BOOLEAN DEFAULT FALSE
 );
 
 CREATE INDEX idx_tasks_project_id ON tasks(project_id);

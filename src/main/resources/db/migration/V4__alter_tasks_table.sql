@@ -1,0 +1,4 @@
+ALTER TABLE tasks
+ALTER COLUMN status VARCHAR(20) CHECK (
+      status IN ('NEW', 'PENDING', 'COMPLETED', 'CANCELED')
+      );
