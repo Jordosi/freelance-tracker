@@ -1,4 +1,3 @@
 ALTER TABLE tasks
-ALTER COLUMN status VARCHAR(20) CHECK (
-      status IN ('NEW', 'PENDING', 'COMPLETED', 'CANCELED')
-      );
+ALTER COLUMN status TYPE VARCHAR(20) USING status::VARCHAR(20),
+ADD CONSTRAINT task_status_check CHECK (status IN ('NEW', 'PENDING', 'COMPLETED', 'CANCELED'));
