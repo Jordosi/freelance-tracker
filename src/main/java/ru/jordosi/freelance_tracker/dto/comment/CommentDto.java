@@ -1,10 +1,11 @@
-package ru.jordosi.freelance_tracker.dto;
+package ru.jordosi.freelance_tracker.dto.comment;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import ru.jordosi.freelance_tracker.model.Task;
+import ru.jordosi.freelance_tracker.model.User;
 
 import java.time.LocalDateTime;
 
@@ -12,9 +13,10 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder(toBuilder = true)
-public class TimeEntryDto {
+public class CommentDto {
     private Long id;
     private Task task;
-    private Integer timeSpent;
-    private LocalDateTime entryDate;
+    private String text;
+    private User author;
+    private LocalDateTime createdAt;
 }

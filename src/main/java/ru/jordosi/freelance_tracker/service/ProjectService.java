@@ -9,4 +9,5 @@ import ru.jordosi.freelance_tracker.model.User;
 public interface ProjectService {
     ProjectDto createProject(ProjectCreateDto projectCreateDto, User currentUser);
     Page<ProjectDto> getProjectsByUser(User currentUser, Pageable pageable);
+    void validateProjectAccess(Long projectId, Long currentUserId);
 }

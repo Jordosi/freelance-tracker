@@ -2,11 +2,12 @@ package ru.jordosi.freelance_tracker.service;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import ru.jordosi.freelance_tracker.dto.CommentDto;
-import ru.jordosi.freelance_tracker.dto.TimeEntryDto;
+import ru.jordosi.freelance_tracker.dto.comment.CommentDto;
+import ru.jordosi.freelance_tracker.dto.time_entry.TimeEntryDto;
 import ru.jordosi.freelance_tracker.dto.task.TaskCreateDto;
 import ru.jordosi.freelance_tracker.dto.task.TaskDto;
 import ru.jordosi.freelance_tracker.dto.task.TaskUpdateDto;
+import ru.jordosi.freelance_tracker.model.Task;
 
 public interface TaskService {
     TaskDto createTask(TaskCreateDto dto, Long projectId, Long currentUserId);
@@ -18,4 +19,6 @@ public interface TaskService {
 
     TaskDto addTimeEntry(Long taskId, TimeEntryDto timeEntry, Long currentUserId);
     TaskDto addComment(Long taskId, CommentDto comment, Long currentUserId);
+    Task getTaskEntity(Long taskId, Long currentUserId);
+    void validateTaskAccess(Long taskId, Long currentUserId);
 }

@@ -7,8 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import ru.jordosi.freelance_tracker.dto.CommentDto;
-import ru.jordosi.freelance_tracker.dto.TimeEntryDto;
+import ru.jordosi.freelance_tracker.dto.comment.CommentDto;
+import ru.jordosi.freelance_tracker.dto.time_entry.TimeEntryDto;
 import ru.jordosi.freelance_tracker.dto.task.TaskCreateDto;
 import ru.jordosi.freelance_tracker.dto.task.TaskDto;
 import ru.jordosi.freelance_tracker.dto.task.TaskUpdateDto;
@@ -196,5 +196,28 @@ public class TaskServiceImpl implements TaskService {
         if (!task.getProject().getFreelancer().getId().equals(currentUserId)) {
             throw new AccessDeniedException("You are not allowed to view this task");
         }
+    }
+
+    @Override
+    public Task getTaskEntity(Long taskId, Long  currentUserId) {
+        TaskDto foundTask = findById(taskId, currentUserId);
+        return Task.builder()
+                .id(foundTask.getId())
+                .title(foundTask.getTitle())
+                .description(foundTask.getDescription())
+                .estimatedTime(foundTask.getEstimatedTime())
+                .status(foundTask.getStatus())
+                .priority(foundTask.getPriority())
+                .deadline(foundTask.getDeadline())
+                .project(foundTask.getProject())
+                .comments(foundTask.getComments())
+                .timeEntries(foundTask.getTimeEntries())
+                .createdAt(foundTask.getCreatedAt())
+                .build();
+    }
+
+    @Override
+    public void validateTaskAccess(Long taskId, Long currentUserId) {
+        validateTaskOwnership(getTaskEntity(taskId, currentUserId), currentUserId);
     }
 }
