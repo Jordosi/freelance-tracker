@@ -41,9 +41,10 @@ CREATE TABLE tasks (
 CREATE TABLE time_entries (
     id BIGSERIAL PRIMARY KEY,
     task_id BIGINT NOT NULL REFERENCES tasks(id),
-    time_spent INTEGER NOT NULL,
-    entry_date TIMESTAMP NOT NULL,
-    description TEXT
+    time_spent INTEGER NOT NULL CHECK (time_spent > 0),
+    entry_date DATE NOT NULL,
+    description VARCHAR(500),
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE comments (
@@ -59,9 +60,13 @@ CREATE TABLE reminders (
     task_id BIGINT NOT NULL REFERENCES tasks(id),
     message TEXT NOT NULL,
     remind_at TIMESTAMP NOT NULL,
-    is_sent BOOLEAN DEFAULT FALSE
+    is_sent BOOLEAN DEFAULT FALSE,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE INDEX idx_tasks_project_id ON tasks(project_id);
 CREATE INDEX idx_tasks_status ON tasks(status);
-CREATE INDEX idx_time_entries_task_id ON time_entries(task_id);
+CREATE INDEX idx_time_entries_task ON time_entries(task_id);
+CREATE INDEX idx_comments_task ON comments(task_id);
+CREATE INDEX idx_reminders_task ON reminders(task_id);
+CREATE INDEX idx_reminders_unsent ON reminders(remind_at) WHERE is_sent = FALSE;
