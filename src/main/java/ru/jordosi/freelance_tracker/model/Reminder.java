@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -18,9 +19,14 @@ public class Reminder {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="task_id", nullable=false)
     private Task task;
     private String message;
+    @Column(name="remind_at", nullable=false)
     private LocalDateTime remindAt;
-    private boolean isSent;
+    @Column(nullable=false, name="is_sent")
+    private boolean isSent = false;
+    @CreationTimestamp
+    private LocalDateTime createdAt;
 }

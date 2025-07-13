@@ -12,6 +12,6 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class CommentCreateDto {
-    @NotNull Long taskId;
-    @NotBlank String text;
+    @NotNull private Long taskId;
+    @NotBlank private String text;
 }
