@@ -24,6 +24,12 @@ public class GlobalControllerAdvice {
                 .body(new ErrorResponse(HttpStatus.FORBIDDEN.toString(), ex.getCause().toString(), ex.getMessage()));
     }
 
+    @ExceptionHandler(Exception.class)
+    public ResponseEntity<ErrorResponse> handleException(Exception ex) {
+        return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getCause().toString(), ex.getMessage()));
+    }
+
     @Data
     @AllArgsConstructor
     @NoArgsConstructor
