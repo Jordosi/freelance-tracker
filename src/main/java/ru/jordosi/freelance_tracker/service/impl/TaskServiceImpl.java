@@ -8,6 +8,7 @@ import org.springframework.security.access.AccessDeniedException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.jordosi.freelance_tracker.dto.comment.CommentDto;
+import ru.jordosi.freelance_tracker.dto.task.TaskResponse;
 import ru.jordosi.freelance_tracker.dto.time_entry.TimeEntryDto;
 import ru.jordosi.freelance_tracker.dto.task.TaskCreateDto;
 import ru.jordosi.freelance_tracker.dto.task.TaskDto;
@@ -29,7 +30,7 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     @Transactional
-    public TaskDto createTask(TaskCreateDto dto, Long projectId, Long currentUserId) {
+    public TaskResponse createTask(TaskCreateDto dto, Long projectId, Long currentUserId) {
         Project project = projectRepository.findByIdAndFreelancerId(projectId,  currentUserId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found or not accessible"));
         Task task = Task.builder()
@@ -41,12 +42,12 @@ public class TaskServiceImpl implements TaskService {
                 .deadline(dto.getDeadline())
                 .estimatedTime(dto.getEstimatedTime())
                 .build();
-        return toDto(taskRepository.save(task));
+        return TaskResponse.of(toDto(taskRepository.save(task)));
     }
 
     @Override
     @Transactional
-    public TaskDto updateTask(Long id,TaskUpdateDto dto, Long projectId, Long currentUserId) {
+    public TaskResponse updateTask(Long id,TaskUpdateDto dto, Long projectId, Long currentUserId) {
         Project project = projectRepository.findByIdAndFreelancerId(projectId, currentUserId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found or not accessible"));
         Task task = taskRepository.findById(id)
@@ -55,32 +56,32 @@ public class TaskServiceImpl implements TaskService {
             throw new AccessDeniedException("You are not allowed to update this task");
         }
 
-        return updateTaskFields(task, dto);
+        return TaskResponse.of(updateTaskFields(task, dto));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public TaskDto findById(Long id, Long currentUserId) {
+    public TaskResponse findById(Long id, Long currentUserId) {
         Task task = taskRepository.findById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
         if (!task.getProject().getFreelancer().getId().equals(currentUserId)) {
             throw new AccessDeniedException("You are not allowed to view this task");
         }
-        return toDto(task);
+        return TaskResponse.of(toDto(task));
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<TaskDto> findByProjectId(Long projectId, Long currentUserId, Pageable pageable) {
+    public Page<TaskResponse> findByProjectId(Long projectId, Long currentUserId, Pageable pageable) {
         Project project = projectRepository.findByIdAndFreelancerId(projectId, currentUserId)
                 .orElseThrow(() -> new ResourceNotFoundException("Project not found or not accessible"));
         return taskRepository.findTasksByProjectId(projectId, pageable)
-                .map(this::toDto);
+                .map(t -> TaskResponse.of(toDto(t)));
     }
 
     @Override
     @Transactional
-    public TaskDto closeTask(Long id, Long currentUserId) {
+    public TaskResponse closeTask(Long id, Long currentUserId) {
         Task task = taskRepository.findWithProjectById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
         validateTaskOwnership(task, currentUserId);
@@ -90,12 +91,12 @@ public class TaskServiceImpl implements TaskService {
         }
 
         task.setStatus(Task.TaskStatus.COMPLETED);
-        return toDto(taskRepository.save(task));
+        return TaskResponse.of(toDto(taskRepository.save(task)));
     }
 
     @Override
     @Transactional
-    public TaskDto reassignTask(Long id, Long projectId, Long currentUserId) {
+    public TaskResponse reassignTask(Long id, Long projectId, Long currentUserId) {
         Task task = taskRepository.findWithProjectById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
         validateTaskOwnership(task, currentUserId);
@@ -106,12 +107,12 @@ public class TaskServiceImpl implements TaskService {
             throw new AccessDeniedException("Task is already assigned to this project");
         }
         task.setProject(project);
-        return toDto(taskRepository.save(task));
+        return TaskResponse.of(toDto(taskRepository.save(task)));
     }
 
     @Override
     @Transactional
-    public TaskDto addTimeEntry(Long id, TimeEntryDto timeEntryDto, Long currentUserId) {
+    public TaskResponse addTimeEntry(Long id, TimeEntryDto timeEntryDto, Long currentUserId) {
         Task task = taskRepository.findWithProjectById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
         validateTaskOwnership(task, currentUserId);
@@ -132,12 +133,12 @@ public class TaskServiceImpl implements TaskService {
         List<TimeEntry> timeEntries = task.getTimeEntries();
         timeEntries.add(timeEntry);
         task.setTimeEntries(timeEntries);
-        return toDto(taskRepository.save(task));
+        return TaskResponse.of(toDto(taskRepository.save(task)));
     }
 
     @Override
     @Transactional
-    public TaskDto addComment(Long id, CommentDto dto, Long currentUserId) {
+    public TaskResponse addComment(Long id, CommentDto dto, Long currentUserId) {
         Task task =  taskRepository.findWithProjectById(id)
                 .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
         validateTaskOwnership(task, currentUserId);
@@ -156,7 +157,7 @@ public class TaskServiceImpl implements TaskService {
         List<Comment> comments = task.getComments();
         comments.add(comment);
         task.setComments(comments);
-        return toDto(taskRepository.save(task));
+        return TaskResponse.of(toDto(taskRepository.save(task)));
     }
 
     private TaskDto toDto(Task task) {
@@ -200,20 +201,13 @@ public class TaskServiceImpl implements TaskService {
 
     @Override
     public Task getTaskEntity(Long taskId, Long  currentUserId) {
-        TaskDto foundTask = findById(taskId, currentUserId);
-        return Task.builder()
-                .id(foundTask.getId())
-                .title(foundTask.getTitle())
-                .description(foundTask.getDescription())
-                .estimatedTime(foundTask.getEstimatedTime())
-                .status(foundTask.getStatus())
-                .priority(foundTask.getPriority())
-                .deadline(foundTask.getDeadline())
-                .project(foundTask.getProject())
-                .comments(foundTask.getComments())
-                .timeEntries(foundTask.getTimeEntries())
-                .createdAt(foundTask.getCreatedAt())
-                .build();
+        Task task = taskRepository.findById(taskId)
+                .orElseThrow(() -> new ResourceNotFoundException("Task not found"));
+        if (!task.getProject().getFreelancer().getId().equals(currentUserId)) {
+            throw new AccessDeniedException("You are not allowed to view this task");
+        }
+
+        return task;
     }
 
     @Override

@@ -14,6 +14,7 @@ import ru.jordosi.freelance_tracker.dto.time_entry.TimeEntryCreateDto;
 import ru.jordosi.freelance_tracker.dto.time_entry.TimeEntryDto;
 import ru.jordosi.freelance_tracker.model.User;
 import ru.jordosi.freelance_tracker.repository.TimeEntryRepository;
+import ru.jordosi.freelance_tracker.security.CurrentUserProvider;
 import ru.jordosi.freelance_tracker.service.ProjectService;
 import ru.jordosi.freelance_tracker.service.TaskService;
 import ru.jordosi.freelance_tracker.service.TimeEntryService;
@@ -26,30 +27,28 @@ public class TimeEntryController {
     private final TimeEntryService timeEntryService;
     private final ProjectService projectService;
     private final TaskService taskService;
+    private final CurrentUserProvider currentUserProvider;
 
     @PostMapping
     public ResponseEntity<TimeEntryDto> createTimeEntry(
-            @RequestBody @Valid TimeEntryCreateDto dto,
-            User user) {
+            @RequestBody @Valid TimeEntryCreateDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(timeEntryService.createTimeEntry(dto, user.getId()));
+                .body(timeEntryService.createTimeEntry(dto, currentUserProvider.getCurrentUserId()));
     }
 
     @GetMapping("/task/{taskId}")
     public ResponseEntity<Page<TimeEntryDto>> getTimeEntriesForTask(
             @PathVariable Long taskId,
-            Pageable pageable,
-            User user) {
+            Pageable pageable) {
         return ResponseEntity.ok(
-                timeEntryService.getTimeEntriesForTask(taskId, user.getId(), pageable));
+                timeEntryService.getTimeEntriesForTask(taskId, currentUserProvider.getCurrentUserId(), pageable));
     }
 
     @GetMapping("/tasks/{taskId}/total-spent-time")
     public ResponseEntity<Integer> getTotalTimeSpentForTask(
-            @PathVariable Long taskId,
-            User user) {
+            @PathVariable Long taskId) {
 
-        taskService.validateTaskAccess(taskId, user.getId());
+        taskService.validateTaskAccess(taskId, currentUserProvider.getCurrentUserId());
 
         int totalMinutes = timeEntryRepository.getTotalTimeSpentByTask(taskId).orElse(0);
 
@@ -59,10 +58,9 @@ public class TimeEntryController {
     @GetMapping("/projects/{projectId}/time-summary")
     public ResponseEntity<Page<TimeSummaryDto>> getTimeSummaryForProject(
             @PathVariable Long projectId,
-            @PageableDefault(size = 30, sort = "entryDate", direction = Sort.Direction.DESC) Pageable pageable,
-            User user) {
+            @PageableDefault(size = 30, sort = "entryDate", direction = Sort.Direction.DESC) Pageable pageable) {
 
-        projectService.validateProjectAccess(projectId, user.getId());
+        projectService.validateProjectAccess(projectId, currentUserProvider.getCurrentUserId());
 
         Page<TimeSummaryDto> summary = timeEntryRepository.getTimeSpentByProject(projectId, pageable);
 

@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.*;
 import ru.jordosi.freelance_tracker.dto.reminder.ReminderCreateDto;
 import ru.jordosi.freelance_tracker.dto.reminder.ReminderDto;
 import ru.jordosi.freelance_tracker.model.User;
+import ru.jordosi.freelance_tracker.security.CurrentUserProvider;
 import ru.jordosi.freelance_tracker.service.ReminderService;
 
 @RestController
@@ -17,21 +18,20 @@ import ru.jordosi.freelance_tracker.service.ReminderService;
 @RequiredArgsConstructor
 public class ReminderController {
     private final ReminderService reminderService;
+    private final CurrentUserProvider currentUserProvider;
 
     @PostMapping
     public ResponseEntity<ReminderDto> createReminder(
-            @RequestBody @Valid ReminderCreateDto dto,
-            User user) {
+            @RequestBody @Valid ReminderCreateDto dto) {
         return ResponseEntity.status(HttpStatus.CREATED)
-                .body(reminderService.createReminder(dto, user.getId()));
+                .body(reminderService.createReminder(dto, currentUserProvider.getCurrentUserId()));
     }
 
     @GetMapping("/task/{taskId}")
     public ResponseEntity<Page<ReminderDto>> getRemindersForTask(
             @PathVariable Long taskId,
-            Pageable pageable,
-            User user) {
+            Pageable pageable) {
         return ResponseEntity.ok(
-                reminderService.getRemindersForTask(taskId, user.getId(), pageable));
+                reminderService.getRemindersForTask(taskId, currentUserProvider.getCurrentUserId(), pageable));
     }
 }
