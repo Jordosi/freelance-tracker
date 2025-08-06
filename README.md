@@ -1,12 +1,14 @@
 ## Freelance tracker API
 RESTful API service which provides project and task management for freelancers and their clients.
+
 This API was developed as a part of a design and technology training practice.
 ### Features
-[x] Registration and authentication with JWT
-[x] User roles support: `CLIENT`, `FREELANCER`, `ADMIN`
-[x] `CLIENT`: create project, assign freelancers, manage tasks
-[x] `FREELANCER`: update task status, add reminders, log time entries
-[x] `ADMIN`: manage users, review projects and tasks properties
+- Registration and authentication with JWT
+-  User roles support: `CLIENT`, `FREELANCER`, `ADMIN`
+-  `CLIENT`: create project, assign freelancers, manage tasks
+-  `FREELANCER`: update task status, add reminders, log time entries
+-  `ADMIN`: manage users, review projects and tasks properties
+
 ### Quick start
 #### Requirements
 - Java 21+
