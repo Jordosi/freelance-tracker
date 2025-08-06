@@ -16,9 +16,8 @@ public class TaskUpdateDto {
     private String title;
     private String description;
     @Pattern(regexp = "NEW|PENDING|COMPLETED|CANCELED")
-    private String status;
-    @Pattern(regexp = "HIGH|MEDIUM|LOW")
     private String priority;
+    private Long projectId;
     private LocalDateTime deadline;
     private Integer estimatedTime;
 }

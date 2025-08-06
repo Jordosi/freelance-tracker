@@ -15,6 +15,4 @@ public class ProjectCreateDto {
     @NotBlank
     String name;
     String description;
-    @NotNull
-    Long clientId;
 }

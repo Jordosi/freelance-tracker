@@ -1,21 +1,17 @@
 package ru.jordosi.freelance_tracker.dto.project;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.jordosi.freelance_tracker.model.User;
 
-import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder=true)
-public class ProjectDto {
-    private Long id;
+public class ProjectUpdateDto {
     private String name;
     private String description;
-    Long freelancerId;
-    Long clientId;
-    LocalDateTime createdAt;
+    private Set<User> freelancers;
 }

@@ -1,2 +1,2 @@
-## Freelance tracker
-A web application for tracking freelancer's tasks
+## Freelance tracker API
+A REST API for tracking freelancer's tasks

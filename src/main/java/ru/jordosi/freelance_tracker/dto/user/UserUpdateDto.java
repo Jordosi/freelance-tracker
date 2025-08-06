@@ -15,6 +15,5 @@ public class UserUpdateDto {
     private String username;
     @NotBlank @Email
     private String email;
-    @Size(min=8)
     private String password;
 }

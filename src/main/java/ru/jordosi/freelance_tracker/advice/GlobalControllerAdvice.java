@@ -27,7 +27,7 @@ public class GlobalControllerAdvice {
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
-                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), ex.getCause().toString(), ex.getMessage()));
+                .body(new ErrorResponse(HttpStatus.INTERNAL_SERVER_ERROR.toString(), (ex.getCause()!=null ? ex.getCause().toString() : "Unknown error"), ex.getMessage()));
     }
 
     @Data

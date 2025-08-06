@@ -5,6 +5,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -22,6 +23,7 @@ public class Comment {
     @JoinColumn(name="task_id", nullable=false)
     private Task task;
     private String text;
+    @CreationTimestamp
     private LocalDateTime createdAt;
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="author_id",  nullable=false)

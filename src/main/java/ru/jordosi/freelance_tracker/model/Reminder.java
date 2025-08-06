@@ -1,5 +1,6 @@
 package ru.jordosi.freelance_tracker.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -28,5 +29,9 @@ public class Reminder {
     @Column(nullable=false, name="is_sent")
     private boolean isSent = false;
     @CreationTimestamp
+    @Column(name="created_at")
     private LocalDateTime createdAt;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="creator_id",  nullable=false)
+    private User creator;
 }

@@ -1,6 +1,7 @@
 package ru.jordosi.freelance_tracker.dto.task;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -16,6 +17,8 @@ import java.time.LocalDateTime;
 public class TaskCreateDto {
     @NotBlank String title;
     String description;
+    @NotNull
+    Long projectId;
     @NotBlank @Pattern(regexp = "HIGH|MEDIUM|LOW") String priority;
     @NotBlank @Pattern(regexp = "NEW|PENDING|COMPLETED|CANCELED") String status = "NEW";
     LocalDateTime deadline;

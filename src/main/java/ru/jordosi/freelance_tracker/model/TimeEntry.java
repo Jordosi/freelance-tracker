@@ -1,5 +1,6 @@
 package ru.jordosi.freelance_tracker.model;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -22,9 +23,16 @@ public class TimeEntry {
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name="task_id", nullable=false)
     private Task task;
+    @Column(name="time_spent")
     private Integer timeSpent;
+    @Column(name="entry_date")
     private LocalDateTime entryDate;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="user_id")
+    private User user;
+
     @CreationTimestamp
+    @Column(name="created_at")
     private LocalDateTime createdAt;
 }

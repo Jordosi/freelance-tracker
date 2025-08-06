@@ -4,13 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.jordosi.freelance_tracker.dto.references.CommentRef;
 import ru.jordosi.freelance_tracker.dto.references.ProjectRef;
+import ru.jordosi.freelance_tracker.model.Task;
+import ru.jordosi.freelance_tracker.repository.ProjectRepository;
 
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.stream.Collectors;
-
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -25,9 +23,9 @@ public class TaskResponse {
     private Integer estimatedTime;
     private LocalDateTime createdAt;
     private ProjectRef project;
-    private List<CommentRef> comments;
+    private ProjectRepository  projectRepository;
 
-    public static TaskResponse of(TaskDto task) {
+    public static TaskResponse of(Task task) {
         return TaskResponse.builder()
                 .id(task.getId())
                 .title(task.getTitle())
@@ -39,7 +37,6 @@ public class TaskResponse {
                 .estimatedTime(task.getEstimatedTime())
                 .createdAt(task.getCreatedAt())
                 .project(new ProjectRef(task.getProject()))
-                .comments(task.getComments().stream().map(CommentRef::new).collect(Collectors.toList()))
                 .build();
     }
 }

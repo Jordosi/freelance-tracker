@@ -1,21 +1,16 @@
 package ru.jordosi.freelance_tracker.dto.time_entry;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.jordosi.freelance_tracker.dto.task.TaskResponse;
 
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
-public class TimeEntryDto {
-    private Long id;
-    private TaskResponse task;
+public class TimeEntryUpdateDto {
     private Integer timeSpent;
+    private Long taskId;
     private LocalDateTime entryDate;
-    private LocalDateTime createdAt;
 }

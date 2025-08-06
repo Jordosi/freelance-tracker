@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.Set;
 
 @Data
 @Entity
@@ -25,11 +26,17 @@ public class Project {
     private String name;
 
     private String description;
+    @ManyToMany
+    @JoinTable(
+            name = "projects_freelancers",
+            joinColumns = @JoinColumn(name = "project_id"),
+            inverseJoinColumns = @JoinColumn(name = "freelancer_id")
+    )
+    private Set<User> freelancers;
     @ManyToOne
-    private User freelancer;
-    @ManyToOne
-    private Client client;
+    private User client;
 
     @CreationTimestamp
+    @Column(name="created_at")
     private LocalDateTime createdAt;
 }

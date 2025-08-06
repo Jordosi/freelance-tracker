@@ -1,20 +1,17 @@
 package ru.jordosi.freelance_tracker.dto.reminder;
 
+import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import ru.jordosi.freelance_tracker.dto.task.TaskResponse;
+
 import java.time.LocalDateTime;
 
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-@Builder(toBuilder = true)
-public class ReminderDto {
-    private Long id;
-    private TaskResponse task;
+public class ReminderUpdateDto {
     private String text;
     private LocalDateTime remindAt;
-    private boolean isSent;
+    private Long taskId;
 }

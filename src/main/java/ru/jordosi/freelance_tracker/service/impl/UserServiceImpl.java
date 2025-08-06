@@ -18,6 +18,8 @@ import ru.jordosi.freelance_tracker.model.User;
 import ru.jordosi.freelance_tracker.repository.UserRepository;
 import ru.jordosi.freelance_tracker.service.UserService;
 
+import java.util.List;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -86,5 +88,11 @@ public class UserServiceImpl implements UserService {
 
         user.setRole(newRole);
         return UserDto.from(userRepository.save(user));
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<UserDto> getFreelancers() {
+        return userRepository.findFreelancers().stream().map(UserDto::from).toList();
     }
 }

@@ -17,6 +17,8 @@ import ru.jordosi.freelance_tracker.dto.user.UserUpdateDto;
 import ru.jordosi.freelance_tracker.model.User;
 import ru.jordosi.freelance_tracker.service.UserService;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
@@ -35,7 +37,7 @@ public class UserController {
         return ResponseEntity.ok(userService.updateCurrentUser((UserDetails) authentication.getPrincipal(), updateDto));
     }
 
-    @GetMapping
+    @GetMapping("/all")
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<Page<UserDto>> getAllUsers(
             @PageableDefault(sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable) {
@@ -59,7 +61,13 @@ public class UserController {
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<UserDto> changeUserRole(
             @PathVariable Long id,
-            @RequestParam User.Role role) {
-        return ResponseEntity.ok(userService.changeUserRole(id, role));
+            @RequestParam String role) {
+        return ResponseEntity.ok(userService.changeUserRole(id, User.Role.valueOf(role)));
+    }
+
+    @GetMapping("/freelancers")
+    @PreAuthorize("hasRole('ADMIN') || hasRole('CLIENT')")
+    public ResponseEntity<List<UserDto>> getFreelancers() {
+        return ResponseEntity.ok(userService.getFreelancers());
     }
 }

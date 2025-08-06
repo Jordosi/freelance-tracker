@@ -2,68 +2,42 @@ package ru.jordosi.freelance_tracker.controller;
 
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.domain.Sort;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.jordosi.freelance_tracker.dto.TimeSummaryDto;
 import ru.jordosi.freelance_tracker.dto.time_entry.TimeEntryCreateDto;
-import ru.jordosi.freelance_tracker.dto.time_entry.TimeEntryDto;
-import ru.jordosi.freelance_tracker.model.User;
-import ru.jordosi.freelance_tracker.repository.TimeEntryRepository;
+import ru.jordosi.freelance_tracker.dto.time_entry.TimeEntryUpdateDto;
+import ru.jordosi.freelance_tracker.model.TimeEntry;
 import ru.jordosi.freelance_tracker.security.CurrentUserProvider;
-import ru.jordosi.freelance_tracker.service.ProjectService;
-import ru.jordosi.freelance_tracker.service.TaskService;
 import ru.jordosi.freelance_tracker.service.TimeEntryService;
+
+import java.util.List;
 
 @RestController
 @RequestMapping("/api/time-entries")
 @RequiredArgsConstructor
 public class TimeEntryController {
-    private final TimeEntryRepository timeEntryRepository;
-    private final TimeEntryService timeEntryService;
-    private final ProjectService projectService;
-    private final TaskService taskService;
-    private final CurrentUserProvider currentUserProvider;
+   private final TimeEntryService timeEntryService;
+   private final CurrentUserProvider currentUserProvider;
 
     @PostMapping
-    public ResponseEntity<TimeEntryDto> createTimeEntry(
-            @RequestBody @Valid TimeEntryCreateDto dto) {
-        return ResponseEntity.status(HttpStatus.CREATED)
-                .body(timeEntryService.createTimeEntry(dto, currentUserProvider.getCurrentUserId()));
-    }
+   public ResponseEntity<TimeEntry> createTimeEntry(@Valid @RequestBody TimeEntryCreateDto timeEntry){
+       return ResponseEntity.status(HttpStatus.CREATED).body(timeEntryService.createTimeEntry(timeEntry, currentUserProvider.getCurrentUserId()));
+   }
 
-    @GetMapping("/task/{taskId}")
-    public ResponseEntity<Page<TimeEntryDto>> getTimeEntriesForTask(
-            @PathVariable Long taskId,
-            Pageable pageable) {
-        return ResponseEntity.ok(
-                timeEntryService.getTimeEntriesForTask(taskId, currentUserProvider.getCurrentUserId(), pageable));
-    }
+   @PutMapping("/{id}")
+   public ResponseEntity<TimeEntry> updateTimeEntry(@PathVariable Long id, @Valid @RequestBody TimeEntryUpdateDto dto){
+       return ResponseEntity.ok(timeEntryService.updateTimeEntry(id, dto, currentUserProvider.getCurrentUserId()));
+   }
 
-    @GetMapping("/tasks/{taskId}/total-spent-time")
-    public ResponseEntity<Integer> getTotalTimeSpentForTask(
-            @PathVariable Long taskId) {
+   @GetMapping
+   public ResponseEntity<List<TimeEntry>> getTimeEntriesByTask(@RequestParam Long taskId){
+       return ResponseEntity.ok(timeEntryService.getTimeEntriesByTask(taskId, currentUserProvider.getCurrentUserId()));
+   }
 
-        taskService.validateTaskAccess(taskId, currentUserProvider.getCurrentUserId());
-
-        int totalMinutes = timeEntryRepository.getTotalTimeSpentByTask(taskId).orElse(0);
-
-        return ResponseEntity.ok(totalMinutes);
-    }
-
-    @GetMapping("/projects/{projectId}/time-summary")
-    public ResponseEntity<Page<TimeSummaryDto>> getTimeSummaryForProject(
-            @PathVariable Long projectId,
-            @PageableDefault(size = 30, sort = "entryDate", direction = Sort.Direction.DESC) Pageable pageable) {
-
-        projectService.validateProjectAccess(projectId, currentUserProvider.getCurrentUserId());
-
-        Page<TimeSummaryDto> summary = timeEntryRepository.getTimeSpentByProject(projectId, pageable);
-
-        return ResponseEntity.ok(summary);
-    }
+   @DeleteMapping
+    public ResponseEntity<Void> deleteTimeEntry(@RequestParam Long id){
+       timeEntryService.deleteTimeEntry(id, currentUserProvider.getCurrentUserId());
+       return ResponseEntity.noContent().build();
+   }
 }

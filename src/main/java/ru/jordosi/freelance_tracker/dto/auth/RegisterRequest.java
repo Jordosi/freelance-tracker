@@ -7,6 +7,7 @@ import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.jordosi.freelance_tracker.model.User;
 
 @Data
 @AllArgsConstructor
@@ -25,4 +26,6 @@ public class RegisterRequest {
     @NotBlank
     @Email
     private String email;
+
+    private String role;
 }

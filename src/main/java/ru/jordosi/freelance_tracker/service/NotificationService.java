@@ -6,7 +6,7 @@ import org.springframework.stereotype.Service;
 @Service
 @Slf4j
 public class NotificationService {
-    public void sendNotification(String email, String message) {
-        log.info("Sending notification to email: " + email +" \n"+message);
+    public void sendNotification(String user, String message) {
+        log.info("Sending notification to user: " + user +" \n"+message);
     }
 }

@@ -13,7 +13,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder(toBuilder = true)
 public class ReminderCreateDto {
-    @NotNull private Long task_id;
+    @NotNull private Long taskId;
     @NotNull private String message;
     @NotNull private LocalDateTime remindAt;
 }

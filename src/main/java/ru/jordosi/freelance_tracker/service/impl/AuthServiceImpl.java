@@ -57,7 +57,7 @@ public class AuthServiceImpl implements AuthService {
                     .body(AuthResponse.builder()
                             .token(token)
                             .username(auth.getName())
-                            .roles(auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).collect(Collectors.toList()))
+                            .role(auth.getAuthorities().stream().map(GrantedAuthority::getAuthority).toList().getFirst().split("_")[1])
                             .build());
         }
         catch (AuthenticationException e) {
@@ -79,7 +79,7 @@ public class AuthServiceImpl implements AuthService {
                 .username(request.getUsername())
                 .email(request.getEmail())
                 .password(passwordEncoder.encode(request.getPassword()))
-                .role(User.Role.USER)
+                .role(User.Role.valueOf(request.getRole()))
                 .build();
         User savedUser = userRepository.save(user);
         Authentication auth = new UsernamePasswordAuthenticationToken(
@@ -101,7 +101,7 @@ public class AuthServiceImpl implements AuthService {
                 .body(AuthResponse.builder()
                         .token(jwtToken)
                         .username(savedUser.getUsername())
-                        .roles(Collections.singletonList(savedUser.getRole().name()))
+                        .role(savedUser.getRole().toString())
                         .build());
     }
 

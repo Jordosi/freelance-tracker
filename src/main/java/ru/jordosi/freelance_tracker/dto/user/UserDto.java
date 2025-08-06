@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 import ru.jordosi.freelance_tracker.model.User;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -14,7 +15,7 @@ public class UserDto {
     private Long id;
     private String username;
     private String email;
-    private User.Role role;
+    private String role;
     private LocalDateTime createdAt;
 
     public static UserDto from(User user) {
@@ -22,7 +23,7 @@ public class UserDto {
                 user.getId(),
                 user.getUsername(),
                 user.getEmail(),
-                user.getRole(),
+                user.getRole().name(),
                 user.getCreatedAt()
         );
     }

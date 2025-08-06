@@ -7,6 +7,8 @@ import ru.jordosi.freelance_tracker.dto.user.UserDto;
 import ru.jordosi.freelance_tracker.dto.user.UserUpdateDto;
 import ru.jordosi.freelance_tracker.model.User;
 
+import java.util.List;
+
 public interface UserService {
     Page<UserDto> getAllUsers(Pageable pageable);
     UserDto getCurrentUser(UserDetails userDetails);
@@ -14,4 +16,5 @@ public interface UserService {
     UserDto updateCurrentUser(UserDetails userDetails, UserUpdateDto userUpdateDto);
     void deleteUser(Long id);
     UserDto changeUserRole(Long id, User.Role newRole);
+    List<UserDto> getFreelancers();
 }

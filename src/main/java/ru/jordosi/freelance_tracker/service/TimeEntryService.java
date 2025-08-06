@@ -1,11 +1,19 @@
 package ru.jordosi.freelance_tracker.service;
 
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import ru.jordosi.freelance_tracker.dto.time_entry.TimeEntryCreateDto;
-import ru.jordosi.freelance_tracker.dto.time_entry.TimeEntryDto;
+import ru.jordosi.freelance_tracker.dto.time_entry.TimeEntryUpdateDto;
+import ru.jordosi.freelance_tracker.model.TimeEntry;
+
+import java.util.List;
 
 public interface TimeEntryService {
-    TimeEntryDto createTimeEntry(TimeEntryCreateDto timeEntryCreateDto, Long userId);
-    Page<TimeEntryDto> getTimeEntriesForTask(Long taskId, Long userId, Pageable pageable);
+    TimeEntry createTimeEntry(TimeEntryCreateDto dto, Long freelancerId);
+
+    List<TimeEntry> getTimeEntriesByTask(Long taskId, Long userId);
+
+    TimeEntry updateTimeEntry(Long entryId, TimeEntryUpdateDto dto, Long freelancerId);
+
+    void deleteTimeEntry(Long entryId, Long freelancerId);
+
+    Integer getTotalTimeForTask(Long taskId, Long userId);
 }

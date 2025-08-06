@@ -1,19 +1,21 @@
 package ru.jordosi.freelance_tracker.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.jordosi.freelance_tracker.dto.comment.CommentCreateDto;
-import ru.jordosi.freelance_tracker.dto.comment.CommentDto;
+import ru.jordosi.freelance_tracker.exception.ResourceNotFoundException;
 import ru.jordosi.freelance_tracker.model.Comment;
 import ru.jordosi.freelance_tracker.model.Task;
 import ru.jordosi.freelance_tracker.model.User;
 import ru.jordosi.freelance_tracker.repository.CommentRepository;
 import ru.jordosi.freelance_tracker.repository.UserRepository;
+import ru.jordosi.freelance_tracker.security.CurrentUserProvider;
+import ru.jordosi.freelance_tracker.service.AccessControlService;
 import ru.jordosi.freelance_tracker.service.CommentService;
 import ru.jordosi.freelance_tracker.service.TaskService;
+
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -21,38 +23,36 @@ public class CommentServiceImpl implements CommentService {
     private final CommentRepository commentRepository;
     private final TaskService taskService;
     private final UserRepository userRepository;
+    private final AccessControlService accessControlService;
+    private final CurrentUserProvider currentUserProvider;
 
     @Override
     @Transactional
-    public CommentDto createComment(CommentCreateDto dto, Long userId) {
-        Task task = taskService.getTaskEntity(dto.getTaskId(), userId);
-        User author = userRepository.getReferenceById(userId);
-
+    public Comment createComment(CommentCreateDto dto, Long clientId) {
+        Task task = taskService.getTaskByIdEntity(dto.getTaskId());
+        User user = userRepository.findById(clientId).orElseThrow(() -> new ResourceNotFoundException("User not found"));
+        accessControlService.validateTaskAccessForWrite(task);
         Comment comment = Comment.builder()
-                .task(task)
-                .author(author)
                 .text(dto.getText())
+                .author(user)
+                .task(task)
                 .build();
-
-        comment = commentRepository.save(comment);
-        return toDto(comment);
+        return commentRepository.save(comment);
     }
 
     @Override
     @Transactional(readOnly = true)
-    public Page<CommentDto> getCommentsForTask(Long taskId, Long userId, Pageable pageable) {
-        taskService.validateTaskAccess(taskId, userId);
-        return commentRepository.findByTaskIdOrderByCreatedAtDesc(taskId, pageable)
-                .map(this::toDto);
+    public List<Comment> getCommentsByTask(Long taskId, Long clientId) {
+        Task task = taskService.getTaskByIdEntity(taskId);
+        accessControlService.validateTaskAccessForRead(task);
+        return commentRepository.findByTaskId(taskId);
     }
 
-    private CommentDto toDto(Comment comment) {
-        return CommentDto.builder()
-                .id(comment.getId())
-                .task(comment.getTask())
-                .author(comment.getAuthor())
-                .text(comment.getText())
-                .createdAt(comment.getCreatedAt())
-                .build();
+    @Override
+    @Transactional
+    public void deleteComment(Long commentId, Long clientId) {
+        Comment comment =  commentRepository.findById(commentId).orElseThrow(() -> new ResourceNotFoundException("Comment not found"));
+        accessControlService.validateTaskAccessForWrite(comment.getTask());
+        commentRepository.delete(comment);
     }
 }
